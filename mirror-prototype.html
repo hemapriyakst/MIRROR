@@ -22,6 +22,8 @@
       --amber-dim: rgba(245, 166, 35, 0.12);
       --red: #ff4d6d;
       --red-dim: rgba(255, 77, 109, 0.12);
+      --green: #00c47a;
+      --green-dim: rgba(0, 196, 122, 0.12);
       --text: #e8e8f0;
       --text-muted: #6b6b80;
       --text-dim: #3a3a50;
@@ -54,15 +56,13 @@
       flex-direction: column;
     }
 
-    /* ─── SCREEN 1: LANDING ─── */
+    /* LANDING */
     #screen-landing {
       align-items: center;
       justify-content: center;
       text-align: center;
       padding: 40px 24px;
-      background:
-        radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0, 229, 200, 0.06) 0%, transparent 70%),
-        var(--bg);
+      background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0, 229, 200, 0.06) 0%, transparent 70%), var(--bg);
       position: relative;
     }
 
@@ -70,8 +70,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 39px, var(--border) 40px),
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, var(--border) 40px),
         repeating-linear-gradient(90deg, transparent, transparent 39px, var(--border) 40px);
       opacity: 0.3;
       pointer-events: none;
@@ -100,12 +99,11 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       margin-top: 12px;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
       position: relative;
       z-index: 1;
     }
 
-    /* Free badge */
     .free-badge {
       display: inline-flex;
       align-items: center;
@@ -130,6 +128,41 @@
       border-radius: 50%;
       background: var(--cyan);
       box-shadow: 0 0 6px var(--cyan);
+    }
+
+    .steps-hint {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      width: 100%;
+      max-width: 440px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+      text-align: left;
+    }
+
+    .steps-hint-title {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 10px;
+    }
+
+    .steps-hint ol {
+      padding-left: 16px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 2;
+    }
+
+    .steps-hint ol li a {
+      color: var(--cyan);
+      text-decoration: none;
     }
 
     .api-setup {
@@ -180,51 +213,6 @@
       line-height: 1.6;
     }
 
-    .api-note a {
-      color: var(--cyan);
-      text-decoration: none;
-      opacity: 0.8;
-    }
-
-    .api-note a:hover {
-      opacity: 1;
-    }
-
-    .steps-hint {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px 20px;
-      width: 100%;
-      max-width: 440px;
-      margin-bottom: 28px;
-      position: relative;
-      z-index: 1;
-      text-align: left;
-    }
-
-    .steps-hint-title {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--amber);
-      margin-bottom: 10px;
-    }
-
-    .steps-hint ol {
-      padding-left: 16px;
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 2;
-    }
-
-    .steps-hint ol li a {
-      color: var(--cyan);
-      text-decoration: none;
-    }
-
     .btn-primary {
       background: var(--cyan);
       color: #000;
@@ -253,7 +241,7 @@
       box-shadow: none;
     }
 
-    /* ─── SCREEN 2: PERSONA SELECT ─── */
+    /* PERSONA */
     #screen-persona {
       padding: 48px 24px;
       align-items: center;
@@ -335,17 +323,14 @@
       transform: translateY(-3px);
     }
 
-    .persona-card:hover::before {
+    .persona-card:hover::before,
+    .persona-card.selected::before {
       opacity: 1;
     }
 
     .persona-card.selected {
       border-color: var(--cyan);
       background: rgba(0, 229, 200, 0.05);
-    }
-
-    .persona-card.selected::before {
-      opacity: 1;
     }
 
     .persona-emoji {
@@ -375,7 +360,25 @@
       font-style: italic;
     }
 
-    /* ─── SCREEN 3: INTERVIEW ─── */
+    .btn-secondary {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--border-bright);
+      color: var(--text);
+    }
+
+    /* INTERVIEW */
     #screen-interview {
       flex-direction: column;
       background: var(--bg);
@@ -420,7 +423,8 @@
 
     .interview-stats {
       display: flex;
-      gap: 20px;
+      gap: 12px;
+      align-items: center;
     }
 
     .stat-chip {
@@ -445,21 +449,224 @@
       color: var(--red);
     }
 
+    .end-session-btn {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .end-session-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    /* VIDEO CALL LAYOUT */
+    .interview-main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 0;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .chat-side {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      min-height: 0;
+    }
+
+    .camera-side {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg2);
+      min-height: 0;
+    }
+
+    /* CAMERA PANEL */
+    .camera-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .cam-header {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .video-wrapper {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #000;
+      aspect-ratio: 4/3;
+    }
+
+    #cam-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+
+    #cam-canvas {
+      display: none;
+    }
+
+    .cam-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .cam-status-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 8px 10px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .cam-badge {
+      font-family: var(--mono);
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+    }
+
+    .cam-badge.ok {
+      background: rgba(0, 196, 122, 0.25);
+      color: var(--green);
+      border: 1px solid rgba(0, 196, 122, 0.4);
+    }
+
+    .cam-badge.warn {
+      background: rgba(245, 166, 35, 0.2);
+      color: var(--amber);
+      border: 1px solid rgba(245, 166, 35, 0.3);
+    }
+
+    .cam-badge.bad {
+      background: rgba(255, 77, 109, 0.2);
+      color: var(--red);
+      border: 1px solid rgba(255, 77, 109, 0.3);
+    }
+
+    .cam-off-msg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      text-align: center;
+      padding: 20px;
+      line-height: 1.8;
+    }
+
+    .bl-meter {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .bl-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bl-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      width: 72px;
+      flex-shrink: 0;
+    }
+
+    .bl-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--bg3);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .bl-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.4s ease, background 0.4s;
+    }
+
+    .bl-val {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-muted);
+      width: 28px;
+      text-align: right;
+    }
+
+    .cam-no-face {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 77, 109, 0.2);
+      border: 1px solid rgba(255, 77, 109, 0.4);
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--red);
+    }
+
+    /* CHAT SIDE */
+    .pressure-mini {
+      padding: 0 16px;
+      flex-shrink: 0;
+    }
+
+    .pressure-mini canvas {
+      max-height: 50px;
+    }
+
     .interview-body {
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 24px;
-      gap: 16px;
+      padding: 16px;
+      gap: 14px;
       overflow-y: auto;
-      max-width: 800px;
-      width: 100%;
-      margin: 0 auto;
     }
 
     .msg {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       animation: fadeUp 0.3s ease;
     }
 
@@ -476,13 +683,13 @@
     }
 
     .msg-avatar {
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 13px;
       flex-shrink: 0;
       margin-top: 2px;
     }
@@ -501,17 +708,16 @@
       background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: 4px 12px 12px 12px;
-      padding: 12px 16px;
-      font-size: 14px;
+      padding: 10px 14px;
+      font-size: 13px;
       line-height: 1.7;
-      max-width: 80%;
+      max-width: 90%;
     }
 
     .msg.user .msg-bubble {
       background: var(--cyan-dim);
       border-color: rgba(0, 229, 200, 0.2);
       border-radius: 12px 4px 12px 12px;
-      color: var(--text);
       margin-left: auto;
     }
 
@@ -525,34 +731,32 @@
       border: 1px solid rgba(245, 166, 35, 0.3);
       border-radius: 4px;
       padding: 1px 5px;
-      font-size: 12px;
+      font-size: 11px;
       color: var(--amber);
       font-family: var(--mono);
     }
 
     .interview-input-area {
       border-top: 1px solid var(--border);
-      padding: 16px 24px;
+      padding: 12px 16px;
       background: var(--bg2);
       flex-shrink: 0;
     }
 
     .input-row {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
-      max-width: 800px;
-      margin: 0 auto;
     }
 
     .speech-btn {
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       border: 2px solid var(--border);
       background: var(--bg3);
       color: var(--text-muted);
-      font-size: 20px;
+      font-size: 18px;
       cursor: pointer;
       transition: all 0.2s;
       flex-shrink: 0;
@@ -585,13 +789,13 @@
       background: var(--bg3);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 12px 14px;
+      padding: 10px 12px;
       color: var(--text);
       font-family: var(--sans);
-      font-size: 14px;
+      font-size: 13px;
       outline: none;
       resize: none;
-      height: 48px;
+      height: 44px;
       transition: border-color 0.2s;
       line-height: 1.5;
     }
@@ -601,13 +805,13 @@
     }
 
     .send-btn {
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       border-radius: 8px;
       border: none;
       background: var(--cyan);
       color: #000;
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
       transition: transform 0.15s, box-shadow 0.15s;
       flex-shrink: 0;
@@ -628,48 +832,16 @@
       transform: none;
     }
 
-    .pressure-mini {
-      max-width: 800px;
-      margin: 0 auto 0;
-      width: 100%;
-      padding: 0 24px;
-    }
-
-    .pressure-mini canvas {
-      max-height: 60px;
-    }
-
-    .end-session-btn {
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 6px 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .end-session-btn:hover {
-      border-color: var(--red);
-      color: var(--red);
-    }
-
-    /* ─── SCREEN 4: MIRROR REPORT ─── */
+    /* REPORT */
     #screen-report {
       padding: 32px 24px;
       align-items: center;
-      background:
-        radial-gradient(ellipse 80% 30% at 50% 100%, rgba(0, 229, 200, 0.04) 0%, transparent 70%),
-        var(--bg);
+      background: radial-gradient(ellipse 80% 30% at 50% 100%, rgba(0, 229, 200, 0.04) 0%, transparent 70%), var(--bg);
     }
 
     .report-wrapper {
       width: 100%;
-      max-width: 760px;
+      max-width: 800px;
     }
 
     .report-title-block {
@@ -685,6 +857,56 @@
 
     .report-title span {
       color: var(--cyan);
+    }
+
+    .mirror-wordmark {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .score-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .score-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 12px;
+      text-align: center;
+    }
+
+    .score-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .score-val {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .score-val.good {
+      color: var(--cyan);
+    }
+
+    .score-val.mid {
+      color: var(--amber);
+    }
+
+    .score-val.bad {
+      color: var(--red);
     }
 
     .split-screen {
@@ -726,8 +948,8 @@
       font-family: var(--mono);
       font-size: 13px;
       line-height: 1.9;
-      min-height: 180px;
-      max-height: 300px;
+      min-height: 160px;
+      max-height: 280px;
       overflow-y: auto;
     }
 
@@ -764,48 +986,6 @@
       line-height: 1.5;
     }
 
-    .score-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .score-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px 16px;
-      text-align: center;
-    }
-
-    .score-label {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    .score-val {
-      font-size: 32px;
-      font-weight: 800;
-      letter-spacing: -1px;
-    }
-
-    .score-val.good {
-      color: var(--cyan);
-    }
-
-    .score-val.mid {
-      color: var(--amber);
-    }
-
-    .score-val.bad {
-      color: var(--red);
-    }
-
     .decision-bar {
       background: var(--bg2);
       border: 1px solid var(--border);
@@ -833,6 +1013,15 @@
       font-weight: 500;
     }
 
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 16px;
+    }
+
     .pressure-chart-section {
       background: var(--bg2);
       border: 1px solid var(--border);
@@ -841,13 +1030,65 @@
       margin-bottom: 24px;
     }
 
-    .section-label {
+    .bl-report-section {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+
+    .bl-per-q {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bl-q-row {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+
+    .bl-q-title {
       font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      font-size: 10px;
       color: var(--cyan);
-      margin-bottom: 16px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .bl-q-flags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .bl-q-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .bl-q-badge.ok {
+      background: var(--green-dim);
+      color: var(--green);
+      border: 1px solid rgba(0, 196, 122, 0.3);
+    }
+
+    .bl-q-badge.warn {
+      background: var(--amber-dim);
+      color: var(--amber);
+      border: 1px solid rgba(245, 166, 35, 0.3);
+    }
+
+    .bl-q-badge.bad {
+      background: var(--red-dim);
+      color: var(--red);
+      border: 1px solid rgba(255, 77, 109, 0.3);
     }
 
     .drill-plan {
@@ -894,25 +1135,7 @@
       justify-content: center;
     }
 
-    .btn-secondary {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      border-radius: 8px;
-      padding: 12px 24px;
-      font-family: var(--sans);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--border-bright);
-      color: var(--text);
-    }
-
-    /* ─── LOADING OVERLAY ─── */
+    /* LOADING */
     .loading-overlay {
       display: none;
       position: fixed;
@@ -951,21 +1174,21 @@
       color: var(--text-muted);
     }
 
-    .mirror-wordmark {
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--text-dim);
-    }
+    @media(max-width:700px) {
+      .interview-main {
+        grid-template-columns: 1fr;
+      }
 
-    @media (max-width: 540px) {
+      .camera-side {
+        display: none;
+      }
+
       .split-screen {
         grid-template-columns: 1fr;
       }
 
       .score-row {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .persona-grid {
@@ -977,19 +1200,16 @@
 
 <body>
 
-  <!-- LOADING OVERLAY -->
   <div class="loading-overlay" id="loading">
     <div class="loader-ring"></div>
     <div class="loader-text" id="loading-text">Thinking...</div>
   </div>
 
-  <!-- ═══ SCREEN 1: LANDING ═══ -->
+  <!-- SCREEN 1: LANDING -->
   <div class="screen active" id="screen-landing">
     <div class="logo-mark">M<span>I</span>RROR</div>
     <div class="tagline">Know yourself before they judge you</div>
-
-    <div class="free-badge">Powered by Groq · 100% Free · No billing ever</div>
-
+    <div class="free-badge">Powered by Groq · 100% Free · Camera Enabled</div>
     <div class="steps-hint">
       <div class="steps-hint-title">🔑 Get your free Groq API key (2 minutes)</div>
       <ol>
@@ -999,105 +1219,143 @@
         <li>Copy and paste it below ↓</li>
       </ol>
     </div>
-
     <div class="api-setup">
       <label>Groq API Key</label>
       <input type="password" id="api-key-input" placeholder="gsk_..." autocomplete="off">
-      <div class="api-note">
-        Free tier: 14,400 requests/day — more than enough for practice.<br>
-        Key stays in your browser only. Never leaves your device except to call Groq's API.
-      </div>
+      <div class="api-note">Free tier: 14,400 requests/day. Key stays in your browser only.</div>
     </div>
-
-    <button class="btn-primary" onclick="goToPersona()">
-      Begin Session →
-    </button>
+    <button class="btn-primary" onclick="goToPersona()">Begin Session →</button>
   </div>
 
-  <!-- ═══ SCREEN 2: PERSONA SELECT ═══ -->
+  <!-- SCREEN 2: PERSONA SELECT -->
   <div class="screen" id="screen-persona">
     <div class="screen-header">
       <div class="screen-label">Step 1 of 2</div>
       <div class="screen-title">Choose your interviewer</div>
-      <div class="screen-sub">Each persona exposes a different vulnerability. Pick one to begin.</div>
+      <div class="screen-sub">Each persona exposes a different vulnerability.</div>
     </div>
-
     <div class="persona-grid">
       <div class="persona-card" data-persona="stone" onclick="selectPersona(this)">
         <span class="persona-emoji">🗿</span>
         <div class="persona-name">The Stone Face</div>
-        <div class="persona-desc">Zero reaction. No encouragement. Dead silence after every answer.</div>
+        <div class="persona-desc">Zero reaction. No encouragement. Dead silence.</div>
         <div class="persona-expose">Exposes: Do you spiral without feedback?</div>
       </div>
       <div class="persona-card" data-persona="digger" onclick="selectPersona(this)">
         <span class="persona-emoji">🔁</span>
         <div class="persona-name">The Digger</div>
-        <div class="persona-desc">Follows every answer with "why?" or "can you elaborate on that?"</div>
+        <div class="persona-desc">Follows every answer with "why?" or "elaborate".</div>
         <div class="persona-expose">Exposes: Do you know your own story?</div>
       </div>
       <div class="persona-card" data-persona="friendly" onclick="selectPersona(this)">
         <span class="persona-emoji">😊</span>
         <div class="persona-name">The Friendly Trap</div>
-        <div class="persona-desc">So warm and agreeable that you overshare and lose focus.</div>
+        <div class="persona-desc">So warm you overshare and lose focus.</div>
         <div class="persona-expose">Exposes: Do you maintain limits under comfort?</div>
       </div>
       <div class="persona-card" data-persona="interrupter" onclick="selectPersona(this)">
         <span class="persona-emoji">✂️</span>
         <div class="persona-name">The Interrupter</div>
-        <div class="persona-desc">Cuts you mid-sentence, changes topics, asks follow-ups abruptly.</div>
+        <div class="persona-desc">Cuts mid-sentence, abruptly changes topics.</div>
         <div class="persona-expose">Exposes: Can you recover without losing thread?</div>
       </div>
     </div>
-
-    <div style="margin-top: 32px; display:flex; gap:12px;">
+    <div style="margin-top:32px;display:flex;gap:12px;">
       <button class="btn-secondary" onclick="showScreen('screen-landing')">← Back</button>
-      <button class="btn-primary" id="btn-start-interview" onclick="startInterview()" disabled>
-        Start Interview →
-      </button>
+      <button class="btn-primary" id="btn-start-interview" onclick="startInterview()" disabled>Start Interview
+        →</button>
     </div>
   </div>
 
-  <!-- ═══ SCREEN 3: INTERVIEW ═══ -->
-  <div class="screen" id="screen-interview" style="flex-direction:column;">
+  <!-- SCREEN 3: INTERVIEW -->
+  <div class="screen" id="screen-interview">
     <div class="interview-header">
       <div class="interview-persona-tag">
         <div class="persona-dot"></div>
-        <span id="header-persona-name" style="font-size:14px; font-weight:600;"></span>
+        <span id="header-persona-name" style="font-size:14px;font-weight:600;"></span>
       </div>
       <div class="interview-stats">
         <div class="stat-chip">Fillers <span class="val" id="stat-fillers">0</span></div>
         <div class="stat-chip">Q <span class="val" id="stat-q">0</span>/5</div>
+        <div class="stat-chip" id="bl-live-chip" style="display:none;">BL <span class="val" id="stat-bl">—</span></div>
         <button class="end-session-btn" onclick="endSession()">End → Report</button>
       </div>
     </div>
 
-    <div class="pressure-mini">
-      <canvas id="pressure-mini-chart"></canvas>
-    </div>
-
-    <div class="interview-body" id="interview-body"></div>
-
-    <div class="interview-input-area">
-      <div class="input-row">
-        <button class="speech-btn" id="mic-btn" onclick="toggleMic()" title="Click to speak">🎙️</button>
-        <textarea class="transcript-input" id="answer-input" placeholder="Type your answer or click 🎙️ to speak..."
-          rows="1"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitAnswer();}"></textarea>
-        <button class="send-btn" id="send-btn" onclick="submitAnswer()">↑</button>
+    <div class="interview-main">
+      <!-- LEFT: chat -->
+      <div class="chat-side">
+        <div class="pressure-mini" style="padding:8px 16px;">
+          <canvas id="pressure-mini-chart"></canvas>
+        </div>
+        <div class="interview-body" id="interview-body"></div>
+        <div class="interview-input-area">
+          <div class="input-row">
+            <button class="speech-btn" id="mic-btn" onclick="toggleMic()" title="Click to speak">🎙️</button>
+            <textarea class="transcript-input" id="answer-input" placeholder="Type your answer or click 🎙️ to speak..."
+              rows="1"
+              onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitAnswer();}"></textarea>
+            <button class="send-btn" onclick="submitAnswer()">↑</button>
+          </div>
+          <div style="text-align:center;margin-top:6px;font-family:var(--mono);font-size:10px;color:var(--text-dim);"
+            id="speech-status"></div>
+        </div>
       </div>
-      <div style="text-align:center; margin-top:8px; font-family:var(--mono); font-size:10px; color:var(--text-dim);"
-        id="speech-status"></div>
+
+      <!-- RIGHT: camera -->
+      <div class="camera-side">
+        <div class="camera-panel">
+          <div class="cam-header">📹 You — Live Feed</div>
+          <div class="video-wrapper" id="video-wrapper">
+            <video id="cam-video" autoplay muted playsinline></video>
+            <canvas id="cam-canvas"></canvas>
+            <div class="cam-overlay" id="cam-overlay"></div>
+            <div class="cam-status-bar" id="cam-badges"></div>
+            <div class="cam-off-msg" id="cam-off-msg">Camera not started.<br>Allow camera access<br>to enable body
+              language<br>tracking.</div>
+          </div>
+          <div class="bl-meter" id="bl-meter">
+            <div class="bl-row">
+              <div class="bl-label">EYE CONTACT</div>
+              <div class="bl-bar">
+                <div class="bl-fill" id="bl-eye" style="width:0%;background:var(--green);"></div>
+              </div>
+              <div class="bl-val" id="bl-eye-val">—</div>
+            </div>
+            <div class="bl-row">
+              <div class="bl-label">POSTURE</div>
+              <div class="bl-bar">
+                <div class="bl-fill" id="bl-posture" style="width:0%;background:var(--green);"></div>
+              </div>
+              <div class="bl-val" id="bl-posture-val">—</div>
+            </div>
+            <div class="bl-row">
+              <div class="bl-label">MOVEMENT</div>
+              <div class="bl-bar">
+                <div class="bl-fill" id="bl-move" style="width:0%;background:var(--green);"></div>
+              </div>
+              <div class="bl-val" id="bl-move-val">—</div>
+            </div>
+            <div class="bl-row">
+              <div class="bl-label">CONFIDENCE</div>
+              <div class="bl-bar">
+                <div class="bl-fill" id="bl-conf" style="width:0%;background:var(--cyan);"></div>
+              </div>
+              <div class="bl-val" id="bl-conf-val">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- ═══ SCREEN 4: MIRROR REPORT ═══ -->
+  <!-- SCREEN 4: REPORT -->
   <div class="screen" id="screen-report">
     <div class="report-wrapper">
       <div class="report-title-block">
         <div class="mirror-wordmark">Mirror Report</div>
         <div class="report-title">What the interviewer <span>actually</span> saw</div>
       </div>
-
       <div class="score-row">
         <div class="score-card">
           <div class="score-label">Content Score</div>
@@ -1108,100 +1366,93 @@
           <div class="score-val bad" id="score-presence">—</div>
         </div>
         <div class="score-card">
+          <div class="score-label">Body Language</div>
+          <div class="score-val mid" id="score-bl">—</div>
+        </div>
+        <div class="score-card">
           <div class="score-label">Decision Window</div>
           <div class="score-val mid" id="score-decision">—</div>
         </div>
       </div>
-
       <div class="split-screen">
         <div class="split-panel">
           <div class="split-panel-header said">🎙️ &nbsp;What you said</div>
           <div class="split-panel-body" id="said-panel">
-            <div style="color:var(--text-dim); font-size:12px;">Loading analysis...</div>
+            <div style="color:var(--text-dim);font-size:12px;">Loading...</div>
           </div>
         </div>
         <div class="split-panel">
           <div class="split-panel-header saw">🪞 &nbsp;What the interviewer saw</div>
           <div class="split-panel-body" id="saw-panel">
-            <div style="color:var(--text-dim); font-size:12px;">Loading analysis...</div>
+            <div style="color:var(--text-dim);font-size:12px;">Loading...</div>
           </div>
         </div>
       </div>
-
+      <div class="bl-report-section">
+        <div class="section-label">📹 Body Language — Per Question</div>
+        <div class="bl-per-q" id="bl-per-q"></div>
+      </div>
       <div class="decision-bar">
         <div class="decision-icon">⏱️</div>
-        <div class="decision-text" id="decision-text">Analyzing decision window...</div>
+        <div class="decision-text" id="decision-text">Analyzing...</div>
       </div>
-
       <div class="pressure-chart-section">
         <div class="section-label">⚡ Pressure Fingerprint</div>
         <canvas id="pressure-chart" style="max-height:120px;"></canvas>
       </div>
-
       <div class="drill-plan">
         <div class="section-label">🎯 Your 3-Week Drill Plan</div>
         <div id="drill-plan-content">
-          <div style="color:var(--text-dim); font-family:var(--mono); font-size:12px;">Generating personalized plan...
-          </div>
+          <div style="color:var(--text-dim);font-family:var(--mono);font-size:12px;">Generating...</div>
         </div>
       </div>
-
       <div class="report-actions">
-        <button class="btn-secondary" onclick="resetToLanding()">← Try Another Persona</button>
+        <button class="btn-secondary" onclick="resetToPersona()">← Try Another Persona</button>
         <button class="btn-primary" onclick="window.print()">Download Report</button>
       </div>
     </div>
   </div>
 
   <script>
-    // ═══════════════════════════════════════════════
-    //  STATE
-    // ═══════════════════════════════════════════════
+    // ═══ STATE ═══
     const state = {
-      apiKey: '',
-      persona: null,
-      // Gemini uses a flat array of {role, parts:[{text}]}
-      // roles: "user" | "model"
-      history: [],
-      fillerCount: 0,
-      questionCount: 0,
-      pressureData: [],
-      recognition: null,
-      listening: false,
+      apiKey: '', persona: null,
+      history: [], fillerCount: 0, questionCount: 0, pressureData: [],
+      recognition: null, listening: false,
       speechSupported: ('webkitSpeechRecognition' in window) || ('SpeechRecognition' in window),
-      pressureMiniChart: null,
-      pressureFullChart: null,
+      pressureMiniChart: null, pressureFullChart: null,
+      // camera / body language
+      camStream: null, camActive: false, faceMesh: null, faceDetector: null,
+      blInterval: null,
+      // per-question body language snapshots
+      blPerQuestion: [],   // [{q, eyeAvg, postureAvg, moveAvg, confAvg, flags:[]}]
+      blCurrent: { eye: [], posture: [], move: [], conf: [] },
+      prevFaceBox: null,
     };
 
     const FILLERS = ['basically', 'i mean', 'like', 'um', 'uh', 'you know', 'sort of',
       'kind of', 'actually', 'literally', 'honestly', 'so yeah', 'right', 'well'];
 
-    // ═══════════════════════════════════════════════
-    //  PERSONA DEFINITIONS
-    //  Gemini uses a "system_instruction" field
-    // ═══════════════════════════════════════════════
     const PERSONAS = {
       stone: {
         name: '🗿 The Stone Face',
-        system: `You are "The Stone Face" — a senior placement interviewer. Give ZERO emotional feedback. No "great answer", no encouragement. Just ask the next question or a neutral follow-up. Flat, clinical, professional tone always. Ask standard placement interview questions: self introduction, strengths/weaknesses, projects, teamwork, goals. Keep each question under 2 sentences. After exactly 5 candidate answers, respond with only the text: SESSION_COMPLETE`
+        system: `You are "The Stone Face" — a senior placement interviewer. Give ZERO emotional feedback. No "great answer", no encouragement. Ask placement questions: self introduction, strengths/weaknesses, projects, teamwork, goals. Keep each question under 2 sentences. After exactly 5 candidate answers, respond with only: SESSION_COMPLETE`
       },
       digger: {
         name: '🔁 The Digger',
-        system: `You are "The Digger" — a placement interviewer who always digs deeper. After every candidate answer, follow up with "Why?" or "Can you be more specific about that?" or "What exactly do you mean?". Never accept surface-level answers. Ask standard placement questions. After 5 total exchanges, respond with only: SESSION_COMPLETE`
+        system: `You are "The Digger" — always dig deeper. After every answer follow up with "Why?" or "Can you be more specific?" or "What exactly do you mean?". After 5 exchanges respond with only: SESSION_COMPLETE`
       },
       friendly: {
         name: '😊 The Friendly Trap',
-        system: `You are "The Friendly Trap" — an extremely warm placement interviewer. Use phrases like "Oh that's wonderful!", "I totally relate!", "You seem really impressive!". Make the candidate so comfortable they overshare or lose structure. Still ask proper placement questions. After 5 candidate answers, respond with only: SESSION_COMPLETE`
+        system: `You are "The Friendly Trap" — extremely warm. Use phrases like "Oh that's wonderful!", "You seem really impressive!". Make the candidate comfortable so they overshare. Ask placement questions. After 5 candidate answers respond with only: SESSION_COMPLETE`
       },
       interrupter: {
         name: '✂️ The Interrupter',
-        system: `You are "The Interrupter" — an impatient placement interviewer. You abruptly redirect mid-topic with phrases like "Right, yes — but tell me this instead:" or "Actually, let me ask you something different:". Change direction at least once per turn. Ask placement interview questions. After 5 candidate answers, respond with only: SESSION_COMPLETE`
+        system: `You are "The Interrupter" — abruptly redirect with "Right, yes — but tell me this instead:" or "Actually, let me ask something different:". Change direction at least once per turn. After 5 candidate answers respond with only: SESSION_COMPLETE`
       }
     };
 
-    // ═══════════════════════════════════════════════
-    //  NAVIGATION
-    // ═══════════════════════════════════════════════
+    // ═══ NAVIGATION ═══
     function showScreen(id) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
@@ -1210,10 +1461,7 @@
 
     function goToPersona() {
       const key = document.getElementById('api-key-input').value.trim();
-      if (!key.startsWith('gsk_')) {
-        alert('Please enter a valid Groq API key (starts with gsk_...).\nGet one free at console.groq.com/keys');
-        return;
-      }
+      if (!key.startsWith('gsk_')) { alert('Please enter a valid Groq API key (starts with gsk_...).\nGet one free at console.groq.com/keys'); return; }
       state.apiKey = key;
       showScreen('screen-persona');
     }
@@ -1225,105 +1473,259 @@
       document.getElementById('btn-start-interview').disabled = false;
     }
 
-    // ═══════════════════════════════════════════════
-    //  INTERVIEW SETUP
-    // ═══════════════════════════════════════════════
+    // ═══ INTERVIEW SETUP ═══
     function startInterview() {
       if (!state.persona) return;
-      state.history = [];
-      state.fillerCount = 0;
-      state.questionCount = 0;
-      state.pressureData = [];
-
-      const p = PERSONAS[state.persona];
-      document.getElementById('header-persona-name').textContent = p.name;
+      state.history = []; state.fillerCount = 0; state.questionCount = 0; state.pressureData = [];
+      state.blPerQuestion = []; state.blCurrent = { eye: [], posture: [], move: [], conf: [] }; state.prevFaceBox = null;
+      document.getElementById('header-persona-name').textContent = PERSONAS[state.persona].name;
       document.getElementById('interview-body').innerHTML = '';
-
       updateStats();
       showScreen('screen-interview');
       initPressureMiniChart();
+      startCamera();
       askFirstQuestion();
     }
 
-    // ═══════════════════════════════════════════════
-    //  GROQ API  (llama-3.3-70b — free tier, no billing)
-    // ═══════════════════════════════════════════════
+    // ═══ CAMERA & BODY LANGUAGE ═══
+    async function startCamera() {
+      const video = document.getElementById('cam-video');
+      const offMsg = document.getElementById('cam-off-msg');
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240, facingMode: 'user' }, audio: false });
+        state.camStream = stream;
+        video.srcObject = stream;
+        video.style.display = 'block';
+        offMsg.style.display = 'none';
+        state.camActive = true;
+        document.getElementById('bl-live-chip').style.display = 'flex';
+        // Start analysis loop after video loads
+        video.onloadeddata = () => {
+          state.blInterval = setInterval(analyzeFrame, 800);
+        };
+      } catch (e) {
+        offMsg.textContent = 'Camera access denied.\nBody language tracking disabled.\nInterview continues normally.';
+        console.warn('Camera error:', e);
+      }
+    }
+
+    function stopCamera() {
+      if (state.blInterval) { clearInterval(state.blInterval); state.blInterval = null; }
+      if (state.camStream) { state.camStream.getTracks().forEach(t => t.stop()); state.camStream = null; }
+      state.camActive = false;
+    }
+
+    // Lightweight face analysis using canvas — no heavy ML library needed
+    // Uses pixel analysis to estimate face presence, position, and movement
+    function analyzeFrame() {
+      if (!state.camActive) return;
+      const video = document.getElementById('cam-video');
+      const canvas = document.getElementById('cam-canvas');
+      if (video.readyState < 2) return;
+
+      canvas.width = video.videoWidth || 320;
+      canvas.height = video.videoHeight || 240;
+      const ctx = canvas.getContext('2d');
+      // mirror to match display
+      ctx.save(); ctx.scale(-1, 1); ctx.drawImage(video, -canvas.width, 0); ctx.restore();
+
+      const w = canvas.width, h = canvas.height;
+      const imageData = ctx.getImageData(0, 0, w, h);
+      const data = imageData.data;
+
+      // ── Skin detection to find face region ──
+      let skinPixels = [], totalSkin = 0;
+      const step = 4; // sample every 4th pixel for speed
+      for (let y = 0; y < h; y += step) {
+        for (let x = 0; x < w; x += step) {
+          const i = (y * w + x) * 4;
+          const r = data[i], g = data[i + 1], b = data[i + 2];
+          if (isSkin(r, g, b)) { skinPixels.push({ x, y }); totalSkin++; }
+        }
+      }
+
+      const totalSampled = (w / step) * (h / step);
+      const skinRatio = totalSkin / totalSampled;
+
+      let faceDetected = skinRatio > 0.04;
+      let faceBox = null;
+
+      if (faceDetected && skinPixels.length > 10) {
+        // Bounding box of skin pixels
+        const xs = skinPixels.map(p => p.x), ys = skinPixels.map(p => p.y);
+        const minX = Math.min(...xs), maxX = Math.max(...xs);
+        const minY = Math.min(...ys), maxY = Math.max(...ys);
+        faceBox = { x: minX, y: minY, w: maxX - minX, h: maxY - minY, cx: (minX + maxX) / 2, cy: (minY + maxY) / 2 };
+
+        // ── Eye Contact: face centered horizontally ──
+        const faceCenterX = faceBox.cx / w; // 0=left, 1=right
+        const faceCenterY = faceBox.cy / h;
+        const hDist = Math.abs(faceCenterX - 0.5); // distance from horizontal center
+        const vDist = Math.abs(faceCenterY - 0.4); // ideal face is upper 40% of frame
+        const eyeScore = Math.max(0, Math.min(100, 100 - (hDist * 150) - (vDist * 80)));
+
+        // ── Posture: face in upper portion of frame (not too low = not slouching) ──
+        const postureScore = Math.max(0, Math.min(100, faceCenterY < 0.5 ? 90 : faceCenterY < 0.65 ? 65 : 35));
+
+        // ── Movement: compare face position to previous frame ──
+        let moveScore = 85; // default = calm
+        if (state.prevFaceBox) {
+          const dx = Math.abs(faceBox.cx - state.prevFaceBox.cx) / w;
+          const dy = Math.abs(faceBox.cy - state.prevFaceBox.cy) / h;
+          const motion = dx + dy;
+          moveScore = Math.max(0, Math.min(100, 100 - motion * 400));
+        }
+        state.prevFaceBox = faceBox;
+
+        // ── Confidence composite ──
+        const confScore = Math.round((eyeScore * 0.4) + (postureScore * 0.35) + (moveScore * 0.25));
+
+        // Push to running averages
+        state.blCurrent.eye.push(Math.round(eyeScore));
+        state.blCurrent.posture.push(Math.round(postureScore));
+        state.blCurrent.move.push(Math.round(moveScore));
+        state.blCurrent.conf.push(confScore);
+
+        // Update live meters
+        updateBLMeters(Math.round(eyeScore), Math.round(postureScore), Math.round(moveScore), confScore);
+        updateBadges(Math.round(eyeScore), Math.round(postureScore), Math.round(moveScore), faceDetected);
+        document.getElementById('stat-bl').textContent = confScore + '%';
+
+      } else {
+        // No face detected
+        updateBadges(0, 0, 0, false);
+        document.getElementById('stat-bl').textContent = '—';
+        const noFace = document.querySelector('.cam-no-face');
+        if (!noFace) {
+          const el = document.createElement('div');
+          el.className = 'cam-no-face'; el.textContent = 'No face detected';
+          document.getElementById('video-wrapper').appendChild(el);
+        }
+        return;
+      }
+
+      // Remove no-face warning if face found
+      const noFace = document.querySelector('.cam-no-face');
+      if (noFace) noFace.remove();
+    }
+
+    function isSkin(r, g, b) {
+      // HSV-based skin detection
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      if (max === 0) return false;
+      const s = (max - min) / max;
+      if (s < 0.1) return false; // too grey
+      // Skin tone range: reddish hues, medium saturation
+      return r > 95 && g > 40 && b > 20 && r > g && r > b && (r - Math.min(g, b)) > 15 && Math.abs(r - g) > 15 && s > 0.15 && s < 0.9 && r < 240;
+    }
+
+    function avg(arr) { return arr.length ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length) : 0; }
+
+    function updateBLMeters(eye, posture, move, conf) {
+      const set = (id, valId, score) => {
+        const fill = document.getElementById(id);
+        const val = document.getElementById(valId);
+        if (!fill || !val) return;
+        fill.style.width = score + '%';
+        fill.style.background = score > 70 ? 'var(--green)' : score > 45 ? 'var(--amber)' : 'var(--red)';
+        val.textContent = score + '%';
+      };
+      set('bl-eye', 'bl-eye-val', eye);
+      set('bl-posture', 'bl-posture-val', posture);
+      set('bl-move', 'bl-move-val', move);
+      const confFill = document.getElementById('bl-conf');
+      const confVal = document.getElementById('bl-conf-val');
+      if (confFill) { confFill.style.width = conf + '%'; confFill.style.background = conf > 70 ? 'var(--cyan)' : conf > 45 ? 'var(--amber)' : 'var(--red)'; }
+      if (confVal) confVal.textContent = conf + '%';
+    }
+
+    function updateBadges(eye, posture, move, faceFound) {
+      const el = document.getElementById('cam-badges');
+      if (!el) return;
+      if (!faceFound) { el.innerHTML = '<span class="cam-badge bad">NO FACE</span>'; return; }
+      const badges = [];
+      if (eye > 70) badges.push(['ok', '👁 EYE CONTACT']);
+      else if (eye > 45) badges.push(['warn', '👁 DRIFTING']);
+      else badges.push(['bad', '👁 LOOK UP']);
+      if (posture > 65) badges.push(['ok', '🪑 GOOD POSTURE']);
+      else if (posture > 40) badges.push(['warn', '🪑 SIT STRAIGHTER']);
+      else badges.push(['bad', '🪑 SLOUCHING']);
+      if (move > 70) badges.push(['ok', '✋ CALM']);
+      else if (move > 45) badges.push(['warn', '✋ FIDGETING']);
+      else badges.push(['bad', '✋ TOO MUCH MOVEMENT']);
+      el.innerHTML = badges.map(([t, txt]) => `<span class="cam-badge ${t}">${txt}</span>`).join('');
+    }
+
+    // Snapshot BL for current question
+    function snapshotBL(qNum) {
+      const eyeAvg = avg(state.blCurrent.eye);
+      const postureAvg = avg(state.blCurrent.posture);
+      const moveAvg = avg(state.blCurrent.move);
+      const confAvg = avg(state.blCurrent.conf);
+      const flags = [];
+      if (!state.camActive || state.blCurrent.eye.length === 0) {
+        flags.push({ t: 'warn', txt: 'Camera not active — no data' });
+      } else {
+        if (eyeAvg < 50) flags.push({ t: 'bad', txt: 'Poor eye contact' });
+        else if (eyeAvg < 70) flags.push({ t: 'warn', txt: 'Inconsistent eye contact' });
+        else flags.push({ t: 'ok', txt: 'Good eye contact' });
+        if (postureAvg < 45) flags.push({ t: 'bad', txt: 'Slouching detected' });
+        else if (postureAvg < 65) flags.push({ t: 'warn', txt: 'Posture could improve' });
+        else flags.push({ t: 'ok', txt: 'Good posture' });
+        if (moveAvg < 50) flags.push({ t: 'bad', txt: 'Excessive movement/fidgeting' });
+        else if (moveAvg < 70) flags.push({ t: 'warn', txt: 'Some nervous movement' });
+        else flags.push({ t: 'ok', txt: 'Calm and composed' });
+        if (confAvg > 70) flags.push({ t: 'ok', txt: 'High confidence presence' });
+        else if (confAvg > 45) flags.push({ t: 'warn', txt: 'Moderate confidence' });
+        else flags.push({ t: 'bad', txt: 'Low confidence signals' });
+      }
+      state.blPerQuestion.push({ q: qNum, eyeAvg, postureAvg, moveAvg, confAvg, flags });
+      // Reset current window
+      state.blCurrent = { eye: [], posture: [], move: [], conf: [] };
+    }
+
+    // ═══ GROQ API ═══
     const GROQ_MODEL = 'llama-3.3-70b-versatile';
     const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
-    async function callGemini(userText) {
+    async function callGroq(userText) {
       const p = PERSONAS[state.persona];
-
-      if (userText) {
-        state.history.push({ role: 'user', content: userText });
-      }
-
-      const messages = [
-        { role: 'system', content: p.system },
-        ...state.history
-      ];
-
+      if (userText) state.history.push({ role: 'user', content: userText });
+      const messages = [{ role: 'system', content: p.system }, ...state.history];
       const res = await fetch(GROQ_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + state.apiKey
-        },
-        body: JSON.stringify({
-          model: GROQ_MODEL,
-          messages: messages,
-          max_tokens: 300,
-          temperature: 0.8
-        })
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + state.apiKey },
+        body: JSON.stringify({ model: GROQ_MODEL, messages, max_tokens: 300, temperature: 0.8 })
       });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err?.error?.message || 'Groq API error');
-      }
-
+      if (!res.ok) { const e = await res.json(); throw new Error(e?.error?.message || 'Groq API error'); }
       const data = await res.json();
       const reply = data.choices?.[0]?.message?.content || '';
       state.history.push({ role: 'assistant', content: reply });
       return reply;
     }
 
-    async function callGeminiAnalysis(prompt, systemPrompt) {
+    async function callGroqAnalysis(prompt, systemPrompt) {
       const res = await fetch(GROQ_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + state.apiKey
-        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + state.apiKey },
         body: JSON.stringify({
           model: GROQ_MODEL,
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: prompt }
-          ],
-          max_tokens: 1200,
-          temperature: 0.4
+          messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: prompt }],
+          max_tokens: 1400, temperature: 0.4
         })
       });
-
       const data = await res.json();
       return data.choices?.[0]?.message?.content || '';
     }
 
-    // ═══════════════════════════════════════════════
-    //  INTERVIEW FLOW
-    // ═══════════════════════════════════════════════
+    // ═══ INTERVIEW FLOW ═══
     async function askFirstQuestion() {
       showLoading('Interviewer is preparing...');
       try {
-        const reply = await callGemini('Hello, I am ready for the interview. Please begin.');
-        hideLoading();
-        state.questionCount++;
-        updateStats();
-        appendMessage('ai', reply);
+        const reply = await callGroq('Hello, I am ready for the interview. Please begin.');
+        hideLoading(); state.questionCount++; updateStats(); appendMessage('ai', reply);
       } catch (e) {
-        hideLoading();
-        appendMessage('ai', '⚠️ API error: ' + e.message + '\n\nCheck that your Groq API key is correct (gsk_...).');
+        hideLoading(); appendMessage('ai', '⚠️ API error: ' + e.message + '\n\nCheck your Groq API key (gsk_...).');
       }
     }
 
@@ -1331,11 +1733,12 @@
       const input = document.getElementById('answer-input');
       const text = input.value.trim();
       if (!text) return;
+      input.value = ''; input.style.height = '44px';
 
-      input.value = '';
-      input.style.height = '48px';
+      // Snapshot BL before resetting
+      snapshotBL(state.questionCount);
 
-      // Detect fillers
+      // Filler detection
       const lower = text.toLowerCase();
       const foundFillers = FILLERS.filter(f => lower.includes(f));
       state.fillerCount += foundFillers.length;
@@ -1344,91 +1747,62 @@
       const words = text.split(/\s+/).length;
       const pressureScore = Math.min(100, (foundFillers.length * 20) + Math.max(0, 40 - words));
       pushPressure(pressureScore);
-
       updateStats();
 
-      // Highlight fillers in display
+      // Highlight fillers
       let displayText = text;
       foundFillers.forEach(f => {
-        const re = new RegExp(`\\b${f}\\b`, 'gi');
+        const re = new RegExp('\\b' + f + '\\b', 'gi');
         displayText = displayText.replace(re, `<span class="filler-flag">${f}</span>`);
       });
-
       appendMessage('user', displayText, true);
 
-      if (state.questionCount >= 5) {
-        endSession();
-        return;
-      }
+      if (state.questionCount >= 5) { endSession(); return; }
 
       showLoading('Interviewer is responding...');
       try {
-        const reply = await callGemini(text);
+        const reply = await callGroq(text);
         hideLoading();
-
         if (reply.includes('SESSION_COMPLETE')) {
-          appendMessage('ai', 'That concludes our interview. Thank you for your time.');
-          setTimeout(endSession, 1500);
-          return;
+          appendMessage('ai', 'That concludes our interview. Thank you.');
+          setTimeout(endSession, 1500); return;
         }
-
-        state.questionCount++;
-        updateStats();
-        appendMessage('ai', reply);
-      } catch (e) {
-        hideLoading();
-        appendMessage('ai', '⚠️ Error: ' + e.message);
-      }
+        state.questionCount++; updateStats(); appendMessage('ai', reply);
+      } catch (e) { hideLoading(); appendMessage('ai', '⚠️ Error: ' + e.message); }
     }
 
     function appendMessage(role, text, isHTML = false) {
       const body = document.getElementById('interview-body');
-      const div = document.createElement('div');
-      div.className = `msg ${role}`;
-
-      const avatar = document.createElement('div');
-      avatar.className = `msg-avatar ${role}`;
+      const div = document.createElement('div'); div.className = `msg ${role}`;
+      const avatar = document.createElement('div'); avatar.className = `msg-avatar ${role}`;
       avatar.textContent = role === 'ai' ? '🤖' : '🧑';
-
-      const bubble = document.createElement('div');
-      bubble.className = 'msg-bubble';
-      if (isHTML) bubble.innerHTML = text;
-      else bubble.textContent = text;
-
-      div.appendChild(avatar);
-      div.appendChild(bubble);
-      body.appendChild(div);
-      body.scrollTop = body.scrollHeight;
+      const bubble = document.createElement('div'); bubble.className = 'msg-bubble';
+      if (isHTML) bubble.innerHTML = text; else bubble.textContent = text;
+      div.appendChild(avatar); div.appendChild(bubble);
+      body.appendChild(div); body.scrollTop = body.scrollHeight;
     }
 
     function updateStats() {
       document.getElementById('stat-fillers').textContent = state.fillerCount;
       document.getElementById('stat-q').textContent = state.questionCount;
       const chip = document.querySelector('.stat-chip');
-      if (state.fillerCount > 5) chip.classList.add('danger');
-      else chip.classList.remove('danger');
+      if (state.fillerCount > 5) chip.classList.add('danger'); else chip.classList.remove('danger');
     }
 
-    // ═══════════════════════════════════════════════
-    //  PRESSURE CHART
-    // ═══════════════════════════════════════════════
+    // ═══ PRESSURE CHART ═══
     function initPressureMiniChart() {
       const ctx = document.getElementById('pressure-mini-chart').getContext('2d');
       if (state.pressureMiniChart) state.pressureMiniChart.destroy();
       state.pressureMiniChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: [],
-          datasets: [{
-            data: [],
-            borderColor: '#f5a623',
-            backgroundColor: 'rgba(245,166,35,0.1)',
-            borderWidth: 1.5, fill: true, tension: 0.4, pointRadius: 0,
+          labels: [], datasets: [{
+            data: [], borderColor: '#f5a623', backgroundColor: 'rgba(245,166,35,0.1)',
+            borderWidth: 1.5, fill: true, tension: 0.4, pointRadius: 0
           }]
         },
         options: {
-          responsive: true, animation: { duration: 300 },
-          plugins: { legend: { display: false } },
+          responsive: true, animation: { duration: 300 }, plugins: { legend: { display: false } },
           scales: { x: { display: false }, y: { display: false, min: 0, max: 100 } }
         }
       });
@@ -1436,132 +1810,110 @@
 
     function pushPressure(score) {
       state.pressureData.push(score);
-      const chart = state.pressureMiniChart;
-      if (!chart) return;
+      const chart = state.pressureMiniChart; if (!chart) return;
       chart.data.labels.push(state.pressureData.length);
-      chart.data.datasets[0].data.push(score);
-      chart.update('none');
+      chart.data.datasets[0].data.push(score); chart.update('none');
     }
 
-    // ═══════════════════════════════════════════════
-    //  MICROPHONE
-    // ═══════════════════════════════════════════════
+    // ═══ MICROPHONE ═══
     function toggleMic() {
-      if (!state.speechSupported) {
-        alert('Speech recognition is not supported in this browser. Please use Chrome.');
-        return;
-      }
+      if (!state.speechSupported) { alert('Speech recognition not supported. Use Chrome.'); return; }
       if (state.listening) { state.recognition?.stop(); return; }
-
       const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
       state.recognition = new SR();
-      state.recognition.continuous = false;
-      state.recognition.interimResults = true;
-      state.recognition.lang = 'en-IN';
-
+      state.recognition.continuous = false; state.recognition.interimResults = true; state.recognition.lang = 'en-IN';
       state.recognition.onstart = () => {
-        state.listening = true;
-        document.getElementById('mic-btn').classList.add('listening');
+        state.listening = true; document.getElementById('mic-btn').classList.add('listening');
         document.getElementById('speech-status').textContent = '● Listening... speak now';
       };
-
       state.recognition.onresult = (e) => {
-        const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
-        document.getElementById('answer-input').value = transcript;
+        document.getElementById('answer-input').value = Array.from(e.results).map(r => r[0].transcript).join('');
       };
-
       state.recognition.onend = () => {
-        state.listening = false;
-        document.getElementById('mic-btn').classList.remove('listening');
+        state.listening = false; document.getElementById('mic-btn').classList.remove('listening');
         document.getElementById('speech-status').textContent = '';
       };
-
       state.recognition.onerror = (e) => {
-        state.listening = false;
-        document.getElementById('mic-btn').classList.remove('listening');
+        state.listening = false; document.getElementById('mic-btn').classList.remove('listening');
         document.getElementById('speech-status').textContent = 'Speech error: ' + e.error;
       };
-
       state.recognition.start();
     }
 
-    // ═══════════════════════════════════════════════
-    //  END SESSION → REPORT
-    // ═══════════════════════════════════════════════
+    // ═══ END SESSION → REPORT ═══
     async function endSession() {
       if (state.recognition) state.recognition.stop();
+      stopCamera();
       showScreen('screen-report');
       initPressureFullChart();
 
-      // Build transcript from history
-      const userTurns = state.history
-        .filter(m => m.role === 'user')
-        .map((m, i) => `Answer ${i + 1}: ${m.content}`)
-        .join('\n\n');
+      // BL overall averages
+      const allEye = state.blPerQuestion.map(q => q.eyeAvg).filter(v => v > 0);
+      const allConf = state.blPerQuestion.map(q => q.confAvg).filter(v => v > 0);
+      const overallBLScore = allConf.length ? avg(allConf) : null;
+      const blGrade = overallBLScore === null ? 'N/A' : overallBLScore > 70 ? 'B+' : overallBLScore > 55 ? 'B' : overallBLScore > 40 ? 'C+' : 'C';
+      const blClass = overallBLScore === null ? 'mid' : overallBLScore > 70 ? 'good' : overallBLScore > 45 ? 'mid' : 'bad';
+      document.getElementById('score-bl').textContent = blGrade;
+      document.getElementById('score-bl').className = 'score-val ' + blClass;
 
-      const totalWords = state.history
-        .filter(m => m.role === 'user')
-        .reduce((sum, m) => sum + m.content.split(/\s+/).length, 0);
+      // Render per-question BL
+      renderBLPerQuestion();
 
-      // Heuristic scores
+      // Text scores
+      const userTurns = state.history.filter(m => m.role === 'user').map((m, i) => `Answer ${i + 1}: ${m.content}`).join('\n\n');
+      const totalWords = state.history.filter(m => m.role === 'user').reduce((sum, m) => sum + m.content.split(/\s+/).length, 0);
       const contentScore = totalWords > 100 ? 'B+' : totalWords > 60 ? 'B' : 'C+';
       const presenceScore = state.fillerCount > 8 ? 'D' : state.fillerCount > 4 ? 'C-' : state.fillerCount > 1 ? 'C+' : 'B+';
       const decisionSec = Math.max(8, 18 - state.fillerCount * 1.5).toFixed(0);
-
       document.getElementById('score-content').textContent = contentScore;
       document.getElementById('score-presence').textContent = presenceScore;
       document.getElementById('score-decision').textContent = decisionSec + 's';
-
       const presEl = document.getElementById('score-presence');
       presEl.className = 'score-val ' + (state.fillerCount > 4 ? 'bad' : state.fillerCount > 1 ? 'mid' : 'good');
-
       document.getElementById('decision-text').innerHTML =
-        `An interviewer forms a first impression in <strong>${decisionSec} seconds</strong>. Your filler words (${state.fillerCount} detected) and hedging language reduced your presence window.`;
+        `An interviewer forms a first impression in <strong>${decisionSec} seconds</strong>. Filler words detected: ${state.fillerCount}. ${overallBLScore ? `Body language confidence averaged <strong>${overallBLScore}%</strong>.` : 'Camera was not active.'}`;
 
-      // Gemini analysis for Mirror Report
+      // AI analysis
       showLoading('Generating your Mirror Report...');
       try {
-        const analysisSystem = `You are Mirror — a forensic interview presence analyst. Analyze the candidate transcript and return ONLY a valid JSON object with this exact structure (no markdown, no explanation, no code fences):
-{
-  "said": ["short verbatim excerpt 1", "short verbatim excerpt 2", "short verbatim excerpt 3", "short verbatim excerpt 4"],
-  "saw": [
-    {"text": "interviewer perception 1", "type": "ok"},
-    {"text": "interviewer perception 2", "type": "warn"},
-    {"text": "interviewer perception 3", "type": "bad"},
-    {"text": "interviewer perception 4", "type": "warn"}
-  ],
-  "drill": [
-    {"week": "Week 1", "items": ["specific drill 1", "specific drill 2"]},
-    {"week": "Week 2", "items": ["specific drill 1", "specific drill 2"]},
-    {"week": "Week 3", "items": ["specific drill 1", "specific drill 2"]}
-  ]
-}
-type values: ok=positive signal, warn=minor issue, bad=serious issue.
-Base the drill plan on the candidate's specific weaknesses you detect.
-Return ONLY the JSON object. Absolutely nothing else.`;
+        const blSummary = state.blPerQuestion.length ?
+          state.blPerQuestion.map(q => `Q${q.q}: eye=${q.eyeAvg}% posture=${q.postureAvg}% movement=${q.moveAvg}% confidence=${q.confAvg}%`).join(', ')
+          : 'Camera not active';
 
-        const prompt = `Interview transcript:\n${userTurns}\n\nFiller words detected: ${state.fillerCount}\nInterviewer persona: ${state.persona}`;
-        const raw = await callGeminiAnalysis(prompt, analysisSystem);
+        const analysisSystem = `You are Mirror — a forensic interview presence analyst. Return ONLY valid JSON (no markdown, no code fences):
+{"said":["excerpt1","excerpt2","excerpt3","excerpt4"],"saw":[{"text":"perception","type":"ok|warn|bad"},{"text":"perception","type":"ok|warn|bad"},{"text":"perception","type":"ok|warn|bad"},{"text":"perception","type":"ok|warn|bad"}],"drill":[{"week":"Week 1","items":["drill1","drill2"]},{"week":"Week 2","items":["drill1","drill2"]},{"week":"Week 3","items":["drill1","drill2"]}]}
+type: ok=positive, warn=minor issue, bad=serious issue. Base drill on specific weaknesses. Include body language feedback if camera data provided.`;
+
+        const prompt = `Transcript:\n${userTurns}\n\nFiller words: ${state.fillerCount}\nPersona: ${state.persona}\nBody language data: ${blSummary}`;
+        const raw = await callGroqAnalysis(prompt, analysisSystem);
         hideLoading();
-
         try {
           const clean = raw.replace(/```json|```/g, '').trim();
           const data = JSON.parse(clean);
           renderSplitScreen(data.said, data.saw);
           renderDrillPlan(data.drill);
-        } catch (parseErr) {
-          renderFallback();
-        }
-      } catch (e) {
-        hideLoading();
-        renderFallback();
+        } catch { renderFallback(); }
+      } catch (e) { hideLoading(); renderFallback(); }
+    }
+
+    function renderBLPerQuestion() {
+      const el = document.getElementById('bl-per-q');
+      if (!state.blPerQuestion.length) {
+        el.innerHTML = '<div style="color:var(--text-dim);font-family:var(--mono);font-size:12px;">Camera was not active during this session.</div>';
+        return;
       }
+      el.innerHTML = state.blPerQuestion.map(q => `
+    <div class="bl-q-row">
+      <div class="bl-q-title">Question ${q.q}</div>
+      <div class="bl-q-flags">
+        ${q.flags.map(f => `<span class="bl-q-badge ${f.t}">${f.txt}</span>`).join('')}
+      </div>
+    </div>`).join('');
     }
 
     function renderSplitScreen(said, saw) {
       document.getElementById('said-panel').innerHTML =
         said.map(s => `<div class="flag-line"><span class="flag-icon">🎙️</span><span class="flag-text">"${s}"</span></div>`).join('');
-
       const iconMap = { ok: '✅', warn: '⚠️', bad: '🔴' };
       document.getElementById('saw-panel').innerHTML =
         saw.map(s => `<div class="flag-line ${s.type}"><span class="flag-icon">${iconMap[s.type] || '⚠️'}</span><span class="flag-text">${s.text}</span></div>`).join('');
@@ -1569,49 +1921,38 @@ Return ONLY the JSON object. Absolutely nothing else.`;
 
     function renderDrillPlan(drill) {
       document.getElementById('drill-plan-content').innerHTML =
-        drill.map(w => `
-      <div class="drill-week">
-        <div class="drill-week-title">${w.week}</div>
-        ${w.items.map(i => `<div class="drill-item">${i}</div>`).join('')}
-      </div>`).join('');
+        drill.map(w => `<div class="drill-week"><div class="drill-week-title">${w.week}</div>
+      ${w.items.map(i => `<div class="drill-item">${i}</div>`).join('')}</div>`).join('');
     }
 
     function renderFallback() {
       const turns = state.history.filter(m => m.role === 'user').slice(0, 4);
       document.getElementById('said-panel').innerHTML =
-        turns.map(m => {
-          const t = m.content;
-          return `<div class="flag-line"><span class="flag-icon">🎙️</span><span class="flag-text">"${t.slice(0, 80)}${t.length > 80 ? '...' : ''}"</span></div>`;
-        }).join('');
+        turns.map(m => { const t = m.content; return `<div class="flag-line"><span class="flag-icon">🎙️</span><span class="flag-text">"${t.slice(0, 80)}${t.length > 80 ? '...' : ''}"</span></div>`; }).join('');
       document.getElementById('saw-panel').innerHTML =
-        `<div class="flag-line warn"><span class="flag-icon">⚠️</span><span class="flag-text">Filler words detected: ${state.fillerCount} instances</span></div>
-     <div class="flag-line warn"><span class="flag-icon">⚠️</span><span class="flag-text">Check that your Groq API key is valid (starts with gsk_...).</span></div>`;
+        `<div class="flag-line warn"><span class="flag-icon">⚠️</span><span class="flag-text">Filler words: ${state.fillerCount} detected</span></div>
+     <div class="flag-line warn"><span class="flag-icon">⚠️</span><span class="flag-text">Check your Groq API key (gsk_...).</span></div>`;
       document.getElementById('drill-plan-content').innerHTML =
-        `<div class="drill-item">Practice 2-minute structured answers using the STAR method daily</div>
-     <div class="drill-item">Record yourself and count filler words — target zero in 3 weeks</div>
-     <div class="drill-item">Do mock interviews with a friend using the Stone Face persona</div>`;
+        `<div class="drill-item">Practice STAR method answers daily — 2 minutes each</div>
+     <div class="drill-item">Record yourself and eliminate filler words in 3 weeks</div>
+     <div class="drill-item">Maintain eye contact with the camera throughout your answers</div>`;
     }
 
     function initPressureFullChart() {
       const ctx = document.getElementById('pressure-chart').getContext('2d');
       if (state.pressureFullChart) state.pressureFullChart.destroy();
-      const labels = state.pressureData.map((_, i) => `Q${i + 1}`);
       state.pressureFullChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: labels.length ? labels : ['Q1', 'Q2', 'Q3'],
+          labels: state.pressureData.length ? state.pressureData.map((_, i) => `Q${i + 1}`) : ['Q1', 'Q2', 'Q3'],
           datasets: [{
-            label: 'Pressure Score',
-            data: state.pressureData.length ? state.pressureData : [20, 45, 30],
-            borderColor: '#f5a623',
-            backgroundColor: 'rgba(245,166,35,0.15)',
-            borderWidth: 2, fill: true, tension: 0.4,
-            pointBackgroundColor: '#f5a623', pointRadius: 4,
+            label: 'Pressure', data: state.pressureData.length ? state.pressureData : [20, 45, 30],
+            borderColor: '#f5a623', backgroundColor: 'rgba(245,166,35,0.15)', borderWidth: 2, fill: true, tension: 0.4,
+            pointBackgroundColor: '#f5a623', pointRadius: 4
           }]
         },
         options: {
-          responsive: true,
-          plugins: {
+          responsive: true, plugins: {
             legend: { display: false },
             tooltip: { backgroundColor: '#181825', titleColor: '#e8e8f0', bodyColor: '#6b6b80' }
           },
@@ -1623,35 +1964,19 @@ Return ONLY the JSON object. Absolutely nothing else.`;
       });
     }
 
-    function resetToLanding() {
-      state.history = [];
-      state.fillerCount = 0;
-      state.questionCount = 0;
-      state.pressureData = [];
-      state.persona = null;
+    function resetToPersona() {
+      state.history = []; state.fillerCount = 0; state.questionCount = 0; state.pressureData = [];
+      state.blPerQuestion = []; state.persona = null;
       document.querySelectorAll('.persona-card').forEach(c => c.classList.remove('selected'));
       document.getElementById('btn-start-interview').disabled = true;
       showScreen('screen-persona');
     }
 
-    // ═══════════════════════════════════════════════
-    //  LOADING
-    // ═══════════════════════════════════════════════
-    function showLoading(msg) {
-      document.getElementById('loading-text').textContent = msg || 'Thinking...';
-      document.getElementById('loading').classList.add('active');
-    }
+    function showLoading(msg) { document.getElementById('loading-text').textContent = msg || 'Thinking...'; document.getElementById('loading').classList.add('active'); }
+    function hideLoading() { document.getElementById('loading').classList.remove('active'); }
 
-    function hideLoading() {
-      document.getElementById('loading').classList.remove('active');
-    }
-
-    // ═══════════════════════════════════════════════
-    //  TEXTAREA AUTO-RESIZE
-    // ═══════════════════════════════════════════════
     document.getElementById('answer-input').addEventListener('input', function () {
-      this.style.height = '48px';
-      this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+      this.style.height = '44px'; this.style.height = Math.min(this.scrollHeight, 120) + 'px';
     });
   </script>
 </body>
