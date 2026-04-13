@@ -988,25 +988,24 @@
     <div class="logo-mark">M<span>I</span>RROR</div>
     <div class="tagline">Know yourself before they judge you</div>
 
-    <div class="free-badge">Powered by Google Gemini · 100% Free</div>
+    <div class="free-badge">Powered by Groq · 100% Free · No billing ever</div>
 
     <div class="steps-hint">
-      <div class="steps-hint-title">🔑 Get your free API key (2 minutes)</div>
+      <div class="steps-hint-title">🔑 Get your free Groq API key (2 minutes)</div>
       <ol>
-        <li>Go to <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a>
-        </li>
-        <li>Sign in with your Google account</li>
+        <li>Go to <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a></li>
+        <li>Sign up with your personal Gmail (not college email)</li>
         <li>Click <strong style="color:var(--text)">Create API Key</strong></li>
         <li>Copy and paste it below ↓</li>
       </ol>
     </div>
 
     <div class="api-setup">
-      <label>Google Gemini API Key</label>
-      <input type="password" id="api-key-input" placeholder="AIza..." autocomplete="off">
+      <label>Groq API Key</label>
+      <input type="password" id="api-key-input" placeholder="gsk_..." autocomplete="off">
       <div class="api-note">
-        Free tier: 1,500 requests/day — more than enough for practice.<br>
-        Key stays in your browser only. Never leaves your device except to call Google's API.
+        Free tier: 14,400 requests/day — more than enough for practice.<br>
+        Key stays in your browser only. Never leaves your device except to call Groq's API.
       </div>
     </div>
 
@@ -1211,8 +1210,8 @@
 
     function goToPersona() {
       const key = document.getElementById('api-key-input').value.trim();
-      if (!key.startsWith('AIza')) {
-        alert('Please enter a valid Gemini API key (starts with AIza...).\nGet one free at aistudio.google.com/app/apikey');
+      if (!key.startsWith('gsk_')) {
+        alert('Please enter a valid Groq API key (starts with gsk_...).\nGet one free at console.groq.com/keys');
         return;
       }
       state.apiKey = key;
@@ -1247,67 +1246,68 @@
     }
 
     // ═══════════════════════════════════════════════
-    //  GEMINI API  (gemini-1.5-flash — free tier)
+    //  GROQ API  (llama-3.3-70b — free tier, no billing)
     // ═══════════════════════════════════════════════
-    const GEMINI_MODEL = 'gemini-2.0-flash';
+    const GROQ_MODEL = 'llama-3.3-70b-versatile';
+    const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
     async function callGemini(userText) {
       const p = PERSONAS[state.persona];
 
-      // Add user message to history
       if (userText) {
-        state.history.push({ role: 'user', parts: [{ text: userText }] });
+        state.history.push({ role: 'user', content: userText });
       }
 
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${state.apiKey}`;
+      const messages = [
+        { role: 'system', content: p.system },
+        ...state.history
+      ];
 
-      const body = {
-        system_instruction: { parts: [{ text: p.system }] },
-        contents: state.history,
-        generationConfig: {
-          maxOutputTokens: 300,
-          temperature: 0.8,
-        }
-      };
-
-      const res = await fetch(url, {
+      const res = await fetch(GROQ_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + state.apiKey
+        },
+        body: JSON.stringify({
+          model: GROQ_MODEL,
+          messages: messages,
+          max_tokens: 300,
+          temperature: 0.8
+        })
       });
 
       if (!res.ok) {
         const err = await res.json();
-        const msg = err?.error?.message || 'Gemini API error';
-        throw new Error(msg);
+        throw new Error(err?.error?.message || 'Groq API error');
       }
 
       const data = await res.json();
-      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-      // Add model reply to history
-      state.history.push({ role: 'model', parts: [{ text: reply }] });
-
+      const reply = data.choices?.[0]?.message?.content || '';
+      state.history.push({ role: 'assistant', content: reply });
       return reply;
     }
 
     async function callGeminiAnalysis(prompt, systemPrompt) {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${state.apiKey}`;
-
-      const body = {
-        system_instruction: { parts: [{ text: systemPrompt }] },
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: { maxOutputTokens: 1200, temperature: 0.4 }
-      };
-
-      const res = await fetch(url, {
+      const res = await fetch(GROQ_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + state.apiKey
+        },
+        body: JSON.stringify({
+          model: GROQ_MODEL,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: prompt }
+          ],
+          max_tokens: 1200,
+          temperature: 0.4
+        })
       });
 
       const data = await res.json();
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      return data.choices?.[0]?.message?.content || '';
     }
 
     // ═══════════════════════════════════════════════
@@ -1323,7 +1323,7 @@
         appendMessage('ai', reply);
       } catch (e) {
         hideLoading();
-        appendMessage('ai', '⚠️ API error: ' + e.message + '\n\nCheck that your Gemini API key is correct.');
+        appendMessage('ai', '⚠️ API error: ' + e.message + '\n\nCheck that your Groq API key is correct (gsk_...).');
       }
     }
 
@@ -1496,12 +1496,12 @@
       // Build transcript from history
       const userTurns = state.history
         .filter(m => m.role === 'user')
-        .map((m, i) => `Answer ${i + 1}: ${m.parts[0].text}`)
+        .map((m, i) => `Answer ${i + 1}: ${m.content}`)
         .join('\n\n');
 
       const totalWords = state.history
         .filter(m => m.role === 'user')
-        .reduce((sum, m) => sum + m.parts[0].text.split(/\s+/).length, 0);
+        .reduce((sum, m) => sum + m.content.split(/\s+/).length, 0);
 
       // Heuristic scores
       const contentScore = totalWords > 100 ? 'B+' : totalWords > 60 ? 'B' : 'C+';
@@ -1580,12 +1580,12 @@ Return ONLY the JSON object. Absolutely nothing else.`;
       const turns = state.history.filter(m => m.role === 'user').slice(0, 4);
       document.getElementById('said-panel').innerHTML =
         turns.map(m => {
-          const t = m.parts[0].text;
+          const t = m.content;
           return `<div class="flag-line"><span class="flag-icon">🎙️</span><span class="flag-text">"${t.slice(0, 80)}${t.length > 80 ? '...' : ''}"</span></div>`;
         }).join('');
       document.getElementById('saw-panel').innerHTML =
         `<div class="flag-line warn"><span class="flag-icon">⚠️</span><span class="flag-text">Filler words detected: ${state.fillerCount} instances</span></div>
-     <div class="flag-line warn"><span class="flag-icon">⚠️</span><span class="flag-text">Check that your Gemini API key is valid and has quota remaining.</span></div>`;
+     <div class="flag-line warn"><span class="flag-icon">⚠️</span><span class="flag-text">Check that your Groq API key is valid (starts with gsk_...).</span></div>`;
       document.getElementById('drill-plan-content').innerHTML =
         `<div class="drill-item">Practice 2-minute structured answers using the STAR method daily</div>
      <div class="drill-item">Record yourself and count filler words — target zero in 3 weeks</div>
