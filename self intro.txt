@@ -1,0 +1,11 @@
+Hi, I am Hemapriya, a 3rd year student pursuing B.Tech in Information Technology at Thiagarajar College of Engineering. I am also a placement representative for my department.
+
+I have a strong interest in problem solving, object-oriented programming, and database management systems. I am comfortable working with Java, SQL, and have basic knowledge of C.
+
+I am interested in problem solving, object-oriented programming, and database management systems. My projects mainly focus on object detection, image processing, and computer vision. I have worked on an IoT-based object detection and ranging system using YOLOv3 for real-time detection and distance measurement.
+
+Additionally, I have done a software engineering internship at Goat Robotics, where I worked on a computer vision-based solution for robotic forklift alignment.
+
+In addition to my technical skills, I have been actively involved in extracurricular activities as an MC, event volunteer, and organizer, which has helped me build strong communication and leadership skills.
+
+I am a quick learner and a team player, and I am always eager to apply my skills to solve real-world problems.
