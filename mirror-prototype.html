@@ -10,6 +10,7 @@
     rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
   <style>
     :root {
       --bg: #0a0a0f;
@@ -2113,8 +2114,26 @@ YOUR PERSONA — THE FRIENDLY TRAP:
     }
 
     // ═══════════════════════════════════════════
-    // CAMERA & BODY LANGUAGE
+    // CAMERA & BODY LANGUAGE — face-api.js
     // ═══════════════════════════════════════════
+    let faceApiReady = false;
+
+    async function loadFaceApi() {
+      try {
+        const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model';
+        await Promise.all([
+          faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+          faceapi.nets.faceLandmark68TinyNet.loadFromUri(MODEL_URL),
+          faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+        ]);
+        faceApiReady = true;
+      } catch (e) {
+        console.warn('face-api models failed, falling back to heuristic:', e);
+        faceApiReady = false;
+      }
+    }
+    loadFaceApi();
+
     async function startCamera() {
       const vid = document.getElementById('cam-vid');
       const off = document.getElementById('cam-off');
@@ -2123,7 +2142,7 @@ YOUR PERSONA — THE FRIENDLY TRAP:
         S.camStream = stream; vid.srcObject = stream; vid.style.display = 'block'; off.style.display = 'none';
         S.camActive = true;
         document.getElementById('bl-chip').style.display = 'flex';
-        vid.onloadeddata = () => { S.blTimer = setInterval(analyzeFrame, 800); };
+        vid.onloadeddata = () => { S.blTimer = setInterval(analyzeFrame, 900); };
       } catch {
         vid.style.display = 'none'; off.style.display = 'flex';
       }
@@ -2135,11 +2154,120 @@ YOUR PERSONA — THE FRIENDLY TRAP:
       S.camActive = false;
     }
 
-    function analyzeFrame() {
+    async function analyzeFrame() {
       if (!S.camActive) return;
       const vid = document.getElementById('cam-vid');
-      const cnv = document.getElementById('cam-cnv');
       if (vid.readyState < 2) return;
+
+      if (faceApiReady) {
+        await analyzeWithFaceApi(vid);
+      } else {
+        analyzeWithHeuristic(vid);
+      }
+    }
+
+    async function analyzeWithFaceApi(vid) {
+      try {
+        const opts = new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.4 });
+        const result = await faceapi.detectSingleFace(vid, opts).withFaceLandmarks(true).withFaceExpressions();
+
+        if (!result) {
+          S.noFaceN++;
+          if (S.noFaceN >= 3) {
+            updateBadges(0, 0, 0, false);
+            document.getElementById('c-bl').textContent = '—';
+            showNoFace('No face detected');
+          }
+          return;
+        }
+
+        S.noFaceN = 0;
+        removeNoFace();
+
+        const { detection, landmarks, expressions } = result;
+        const box = detection.box;
+        const vw = vid.videoWidth || 320, vh = vid.videoHeight || 240;
+
+        // ── Eye Contact Score ──
+        // Use nose tip vs face center to estimate gaze direction
+        const nose = landmarks.getNose();
+        const noseTip = nose[3]; // tip of nose
+        const faceCx = box.x + box.width / 2;
+        const faceCy = box.y + box.height / 2;
+        const gazeOffsetX = Math.abs(noseTip.x - faceCx) / (box.width / 2);
+        const gazeOffsetY = Math.abs(noseTip.y - faceCy) / (box.height / 2);
+        // Also check if face is centered in frame
+        const frameCx = box.x / vw + box.width / (2 * vw);
+        const frameCenterOffset = Math.abs(frameCx - 0.5) * 2;
+        const eyeS = Math.max(0, Math.min(100,
+          100 - gazeOffsetX * 40 - gazeOffsetY * 20 - frameCenterOffset * 25
+        ));
+
+        // ── Posture Score ──
+        // Face position in frame: higher up = better posture
+        const faceTopRatio = (box.y) / vh;
+        const faceSizeRatio = box.height / vh;
+        // Good posture: face in upper 60% of frame, reasonable size
+        const posS = Math.max(0, Math.min(100,
+          faceTopRatio < 0.15 ? 75 : // too high (leaning forward)
+            faceTopRatio < 0.35 ? 95 : // perfect
+              faceTopRatio < 0.55 ? 70 : // slightly low
+                40                     // slouching/too low
+        ));
+
+        // ── Movement Score ──
+        const cx = box.x + box.width / 2, cy = box.y + box.height / 2;
+        let movS = 90;
+        if (S.prevFace) {
+          const dx = Math.abs(cx - S.prevFace.cx) / vw;
+          const dy = Math.abs(cy - S.prevFace.cy) / vh;
+          movS = Math.max(0, Math.min(100, 100 - (dx + dy) * 350));
+        }
+        S.prevFace = { cx, cy };
+
+        // ── Expression Score ──
+        // Confident = neutral/happy, nervous = fearful/surprised/sad
+        const nervousScore = (expressions.fearful || 0) * 100 + (expressions.surprised || 0) * 40 + (expressions.sad || 0) * 30;
+        const confidentBoost = (expressions.neutral || 0) * 10 + (expressions.happy || 0) * 5;
+        const expressionPenalty = Math.min(40, nervousScore * 0.4 - confidentBoost * 0.1);
+
+        // ── Overall Confidence ──
+        const confS = Math.max(0, Math.min(100,
+          Math.round(eyeS * 0.4 + posS * 0.3 + movS * 0.2) - expressionPenalty
+        ));
+
+        // Store
+        S.blCurrent.eye.push(Math.round(eyeS));
+        S.blCurrent.pos.push(Math.round(posS));
+        S.blCurrent.mov.push(Math.round(movS));
+        S.blCurrent.conf.push(confS);
+
+        // ── Dominant expression label ──
+        const expEntries = Object.entries(expressions).sort((a, b) => b[1] - a[1]);
+        const topExp = expEntries[0];
+        const expLabel = topExp[1] > 0.4 ? formatExpression(topExp[0]) : '';
+
+        updateBLMeters(Math.round(eyeS), Math.round(posS), Math.round(movS), confS);
+        updateBadgesWithExp(Math.round(eyeS), Math.round(posS), Math.round(movS), confS, expLabel);
+        document.getElementById('c-bl').textContent = confS + '%';
+
+      } catch (e) {
+        // face-api threw — fall back silently
+        analyzeWithHeuristic(vid);
+      }
+    }
+
+    function formatExpression(exp) {
+      const map = {
+        neutral: '😐 NEUTRAL', happy: '😊 CONFIDENT', surprised: '😮 SURPRISED',
+        fearful: '😰 NERVOUS', sad: '😔 LOW ENERGY', disgusted: '😑 DISENGAGED', angry: '😤 TENSE'
+      };
+      return map[exp] || exp.toUpperCase();
+    }
+
+    function analyzeWithHeuristic(vid) {
+      // Original skin-pixel fallback
+      const cnv = document.getElementById('cam-cnv');
       cnv.width = vid.videoWidth || 320; cnv.height = vid.videoHeight || 240;
       const ctx = cnv.getContext('2d');
       ctx.save(); ctx.scale(-1, 1); ctx.drawImage(vid, -cnv.width, 0); ctx.restore();
@@ -2153,40 +2281,25 @@ YOUR PERSONA — THE FRIENDLY TRAP:
       const sampled = (w / step) * (h / step);
       const ratio = total / sampled;
       const detected = ratio > 0.025 && skin.length > 8;
-
       if (detected) {
-        S.noFaceN = 0;
-        const nf = document.querySelector('.no-face'); if (nf) nf.remove();
+        S.noFaceN = 0; removeNoFace();
         const xs = skin.map(p => p.x), ys = skin.map(p => p.y);
         const face = { cx: (Math.min(...xs) + Math.max(...xs)) / 2, cy: (Math.min(...ys) + Math.max(...ys)) / 2 };
         const fx = face.cx / w, fy = face.cy / h;
         const eyeS = Math.max(0, Math.min(100, 100 - Math.abs(fx - 0.5) * 150 - Math.abs(fy - 0.4) * 80));
         const posS = Math.max(0, Math.min(100, fy < 0.5 ? 90 : fy < 0.65 ? 65 : 35));
         let movS = 85;
-        if (S.prevFace) {
-          const dx = Math.abs(face.cx - S.prevFace.cx) / w, dy = Math.abs(face.cy - S.prevFace.cy) / h;
-          movS = Math.max(0, Math.min(100, 100 - (dx + dy) * 400));
-        }
+        if (S.prevFace) { const dx = Math.abs(face.cx - S.prevFace.cx) / w, dy = Math.abs(face.cy - S.prevFace.cy) / h; movS = Math.max(0, Math.min(100, 100 - (dx + dy) * 400)); }
         S.prevFace = face;
         const confS = Math.round(eyeS * 0.4 + posS * 0.35 + movS * 0.25);
-        S.blCurrent.eye.push(Math.round(eyeS));
-        S.blCurrent.pos.push(Math.round(posS));
-        S.blCurrent.mov.push(Math.round(movS));
-        S.blCurrent.conf.push(confS);
+        S.blCurrent.eye.push(Math.round(eyeS)); S.blCurrent.pos.push(Math.round(posS));
+        S.blCurrent.mov.push(Math.round(movS)); S.blCurrent.conf.push(confS);
         updateBLMeters(Math.round(eyeS), Math.round(posS), Math.round(movS), confS);
         updateBadges(Math.round(eyeS), Math.round(posS), Math.round(movS), true);
         document.getElementById('c-bl').textContent = confS + '%';
       } else {
         S.noFaceN++;
-        if (S.noFaceN >= 3) {
-          updateBadges(0, 0, 0, false);
-          document.getElementById('c-bl').textContent = '—';
-          if (!document.querySelector('.no-face')) {
-            const el = document.createElement('div'); el.className = 'no-face';
-            el.textContent = 'Adjust lighting';
-            document.getElementById('video-box').appendChild(el);
-          }
-        }
+        if (S.noFaceN >= 3) { updateBadges(0, 0, 0, false); document.getElementById('c-bl').textContent = '—'; showNoFace('Adjust lighting'); }
       }
     }
 
@@ -2197,6 +2310,29 @@ YOUR PERSONA — THE FRIENDLY TRAP:
       if (max === 0) return false;
       const s = (max - min) / max;
       return r > 60 && g > 30 && b > 15 && r > b && (r - Math.min(g, b)) > 10 && s > 0.08 && s < 0.95 && r < 245;
+    }
+
+    function showNoFace(msg) {
+      if (!document.querySelector('.no-face')) {
+        const el = document.createElement('div'); el.className = 'no-face';
+        el.textContent = msg; document.getElementById('video-box').appendChild(el);
+      }
+    }
+    function removeNoFace() { const nf = document.querySelector('.no-face'); if (nf) nf.remove(); }
+
+    function updateBadgesWithExp(eye, pos, mov, conf, expLabel) {
+      const el = document.getElementById('cam-badges'); if (!el) return;
+      const b = [];
+      b.push(eye > 70 ? ['ok', '👁 EYE OK'] : eye > 45 ? ['warn', '👁 DRIFTING'] : ['bad', '👁 LOOK UP']);
+      b.push(pos > 65 ? ['ok', '🪑 POSTURE OK'] : pos > 40 ? ['warn', '🪑 SIT STRAIGHTER'] : ['bad', '🪑 SLOUCHING']);
+      b.push(mov > 70 ? ['ok', '✋ CALM'] : mov > 45 ? ['warn', '✋ FIDGETING'] : ['bad', '✋ MOVING']);
+      if (expLabel) b.push(['ok', expLabel]);
+      el.innerHTML = b.map(([t, txt]) => `<span class="cbadge ${t}">${txt}</span>`).join('');
+    }
+
+    function updateBadges(eye, pos, mov, found) {
+      if (!found) { const el = document.getElementById('cam-badges'); if (el) el.innerHTML = ''; return; }
+      updateBadgesWithExp(eye, pos, mov, 0, '');
     }
 
     function avg(arr) { return arr.length ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length) : 0; }
@@ -2215,16 +2351,6 @@ YOUR PERSONA — THE FRIENDLY TRAP:
       const bc = document.getElementById('b-conf'); const vc = document.getElementById('v-conf');
       if (bc) { bc.style.width = conf + '%'; bc.style.background = conf > 70 ? 'var(--cyan)' : conf > 45 ? 'var(--amber)' : 'var(--red)'; }
       if (vc) vc.textContent = conf + '%';
-    }
-
-    function updateBadges(eye, pos, mov, found) {
-      const el = document.getElementById('cam-badges'); if (!el) return;
-      if (!found) { el.innerHTML = ''; return; }
-      const b = [];
-      b.push(eye > 70 ? ['ok', '👁 EYE OK'] : eye > 45 ? ['warn', '👁 DRIFTING'] : ['bad', '👁 LOOK UP']);
-      b.push(pos > 65 ? ['ok', '🪑 POSTURE OK'] : pos > 40 ? ['warn', '🪑 SIT STRAIGHTER'] : ['bad', '🪑 SLOUCHING']);
-      b.push(mov > 70 ? ['ok', '✋ CALM'] : mov > 45 ? ['warn', '✋ FIDGETING'] : ['bad', '✋ MOVING']);
-      el.innerHTML = b.map(([t, txt]) => `<span class="cbadge ${t}">${txt}</span>`).join('');
     }
 
     function snapshotBL(qNum) {
